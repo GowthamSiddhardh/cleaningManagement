@@ -26,25 +26,26 @@ public class EmployeeDao {
 		return true;
 		
      }
-     public boolean validation(String email)
-     {  boolean flag=false;
+     public Employee validation(String email,String password)
+     {  
     	Connection con=ConnectionClass.getConnection();
     	ResultSet rs=null;
+    	Employee emp=null;
     	try {
-    		String query="select emp_id from WMS_employee where emp_email='"+email+"'";
+    		String query="select * from WMS_employee where emp_email='"+email+"' and emp_pwd='"+password+"'";
 			Statement pstmt=con.createStatement();
 			 rs=pstmt.executeQuery(query);
 			if(rs.next())
-			{    flag=true;
-				System.out.println(rs.getInt(1));
+			{    
+				emp=new Employee(email,rs.getString(3),password);
 				
-			}
-			
+		    }	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return flag;
+    	return emp;
+		
     	
     	 
     	 

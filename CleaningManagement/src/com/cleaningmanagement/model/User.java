@@ -50,6 +50,12 @@ public class User {
 		this.userAddress = userAddress;
 		this.userMobileNo = userMobileNo;
 	}
+	public User(String email, String string, String password) {
+		// TODO Auto-generated constructor stub
+		this.userEmail=email;
+		this.userName=string;
+		this.userPwd=password;
+	}
 	@Override
 	public String toString() {
 		return "userEmail=" + userEmail + "\nuserName=" + userName + "\nuserPwd=" + userPwd + "\nuserAddress="

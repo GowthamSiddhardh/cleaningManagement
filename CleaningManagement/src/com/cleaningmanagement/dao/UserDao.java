@@ -29,6 +29,27 @@ public class UserDao {
 		return true;
 		
      }
+	 public User validateUser(String email,String password)
+	 {   User user=null;
+		 Connection con=ConnectionClass.getConnection();
+		 String query="select * from WMS_user where user_email='"+email+"' and user_pwd='"+password+"'";
+		 Statement st;
+		try {
+			st = con.createStatement();
+			ResultSet rs=st.executeQuery(query);
+			if(rs.next())
+			{
+				user=new User(email,rs.getString(3),password);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
+		return user;
+		 
+	 }
     
     	
 }

@@ -10,8 +10,8 @@ import java.util.Scanner;
 import com.cleaningmanagement.model.Admin;
 
 public class AdminDao {
-	public boolean AdminDatabase(String adminEmail,String passWord)  {
-		boolean flag=false;
+	public Admin AdminDatabase(String adminEmail,String passWord)  {
+		Admin admin=null;
         try {
 			Connection con=ConnectionClass.getConnection();
 			String insertQuery="select * from WMS_admin where admin_email='"+adminEmail+"'and admin_pwd='"+passWord+"'";
@@ -20,18 +20,15 @@ public class AdminDao {
 			ResultSet rs=pstmt.executeQuery(insertQuery);
 			if(rs.next())
 			{
-				flag=true;
+				admin=new Admin(adminEmail,passWord);
 			}
-			else
-			{
-				flag=false;
-			}
+			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return flag;
+        return admin;
         
     }
 }
