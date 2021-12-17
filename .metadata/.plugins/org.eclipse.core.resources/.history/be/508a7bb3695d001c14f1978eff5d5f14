@@ -1,0 +1,21 @@
+package com.cleaningmanagement.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import com.cleaningmanagement.model.Admin;
+
+public class AdminDao {
+	public boolean AdminDatabase(Admin ad) throws ClassNotFoundException, SQLException {
+        Connection con=ConnectionClass.getConnection();
+        String query="insert into WMS_admin values(?,?,?,?)";
+        PreparedStatement pstmt =con.prepareStatement(query);
+        
+		return false;
+        
+        
+       
+}
+}

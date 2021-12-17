@@ -1,0 +1,11 @@
+package com.cleaningmanagement.model;
+
+public class Request {
+     public User userId;
+     public Employee empId;
+     public String catogories;
+     public String location;
+     public String status;
+     
+     
+}

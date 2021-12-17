@@ -1,0 +1,16 @@
+import java.util.ArrayList;
+
+public class Lsm {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList list=new ArrayList();
+		list.add("gowtham");
+		list.add("mani");
+		list.add("munish");
+		list.add("pp");
+		System.out.println(list);
+
+	}
+
+}

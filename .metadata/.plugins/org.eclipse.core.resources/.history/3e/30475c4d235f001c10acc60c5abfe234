@@ -1,0 +1,27 @@
+package com.cleaningmanagement.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.cleaningmanagement.model.Calculation;
+
+public class CalculationDao {
+    public Calculation insert(Calculation cal)
+    {   Connection con=ConnectionClass.getConnection();
+    	String query="insert into WMS_calculation values(?,?,?)";
+    	try {
+			PreparedStatement pstmt=con.prepareStatement(query);
+			pstmt.setString(1, cal.getCatagories());
+			pstmt.setInt(2, cal.getWeightInKg());
+			pstmt.setDouble(3, cal.getAmount());
+			pstmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+		return cal;
+    	
+    }
+}

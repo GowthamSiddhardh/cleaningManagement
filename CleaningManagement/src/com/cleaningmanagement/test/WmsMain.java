@@ -2,14 +2,20 @@ package com.cleaningmanagement.test;
 
 
 
+
+
 import java.util.Scanner;
 
 import com.cleaningmanagement.dao.AdminDao;
+
 import com.cleaningmanagement.dao.ConnectionClass;
 import com.cleaningmanagement.dao.EmployeeDao;
+import com.cleaningmanagement.dao.RequestDao;
 import com.cleaningmanagement.dao.UserDao;
 import com.cleaningmanagement.model.Admin;
+
 import com.cleaningmanagement.model.Employee;
+import com.cleaningmanagement.model.Request;
 import com.cleaningmanagement.model.User;
 
 public class WmsMain {
@@ -73,6 +79,7 @@ public class WmsMain {
 	    		String empEmail=null;
 	    		String empName=null;
 	    		String empPassword=null;
+	    		String location=null;
 	    		boolean b=false;
 	    		do {
 	            System.out.println("enter the employee email");
@@ -110,7 +117,19 @@ public class WmsMain {
 	  	    	   System.out.println("password not be empty");
 	  	         }
 	  		     }while(!empPassword.matches("[a-zA-z0-9&@#$_]{8,15}")||empPassword.isEmpty());
-	    		Employee emp=new Employee(empEmail,empName,empPassword);
+	    		do {
+	    			System.out.println("enter the location");
+	    		    location=sc.nextLine();
+	    			if(location.isEmpty())
+	    			{
+	    				System.out.println("location should not be empty");
+	    			}
+	    			if(!location.matches("[a-zA-Z]+"))
+	    			{
+	    				System.out.println("location should be alphabets only");
+	    			}
+	    		}while(location.isEmpty() ||!location.matches("[a-zA-Z]+") );
+	    		Employee emp=new Employee(empEmail,empName,empPassword,location);
 	    		empdao=new EmployeeDao();
 	    		b=empdao.insertEmpDatabase(emp);
 	    		System.out.println("inserted successfully");
@@ -157,10 +176,7 @@ public class WmsMain {
     		    	System.out.println("invalid email or password");
     		    }
 	    	    }while(employee==null);
-    		   
-	    	  
-    		    
-	    	}
+    		 }
 	    break;
 	       case 3:
 				System.out.println("\n1 registration \n2 validation");
@@ -168,7 +184,7 @@ public class WmsMain {
 		    	
 		    	switch(j) {
 		    	case 1:
-		    		String userEmail=null;
+		    	   String userEmail=null;
 		 		   String userName=null;
 		 		   String userPassword=null;
 		 		   String userAddress=null;
@@ -270,15 +286,27 @@ public class WmsMain {
 		    		user1=udd.validateUser(validateUseremail,validateUserPwd);
 		    		if(user1!=null)
 		    		{
-		    			System.out.println("wecome"+" "+user1.getUserName());
+		    			int userId=user1.getUserId();
+		    			System.out.println("wecome"+" "+userId);
+	    			    System.out.println("enter the catagories");
+		    			String catagories=sc.nextLine();
+		    			System.out.println("enter the location");
+		    			String location=sc.nextLine();
+		    			Request req=new Request(userId,catagories,location);
+		    			RequestDao rd=new RequestDao();
+		    			rd.insertRequestDetails(req);
 		    		}
 		    		else
 		    		{
 		    			System.out.println("invalid username and password");
 		    		}
 		    		}while(user1==null);
+		    	    
+		    		
+		    		
 		    	}
-		    	
+	      
+	    	   
 		   }
 	}
 }

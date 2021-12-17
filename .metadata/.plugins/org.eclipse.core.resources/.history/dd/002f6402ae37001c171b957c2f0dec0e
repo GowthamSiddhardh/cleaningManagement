@@ -1,0 +1,8 @@
+package com.gowtham;
+
+public static class Sample {
+	static int a=4;
+ public  void test() {
+	
+ }
+}

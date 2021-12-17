@@ -6,6 +6,7 @@ public class Employee {
 	private String empEmail;
 	private String empName;
 	private String empPassWord;
+	private String location;
 	public String getEmpEmail() {
 		return empEmail;
 	}
@@ -24,19 +25,26 @@ public class Employee {
 	public void setEmpPassWord(String empPassWord) {
 		this.empPassWord = empPassWord;
 	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	public Employee() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Employee(String empEmail, String empName, String empPassWord) {
+	public Employee(String empEmail, String empName, String empPassWord,String location) {
 		super();
 		this.empEmail = empEmail;
 		this.empName = empName;
 		this.empPassWord = empPassWord;
+		this.location=location;
 	}
 	@Override
 	public String toString() {
-		return "empEmail=" + empEmail + "\nempName=" + empName + "\nempPassWord=" + empPassWord;
+		return "empEmail=" + empEmail + "\nempName=" + empName + "\nempPassWord=" + empPassWord + "\nlocation=" + location;
 	}
 	@Override
 	public int hashCode() {

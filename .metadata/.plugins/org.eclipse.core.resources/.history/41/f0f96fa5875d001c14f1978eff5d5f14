@@ -1,0 +1,20 @@
+package com.cleaningmanagement.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class EmployeeDao {
+     public void insertEmpDatabase(Employee emp)
+     {
+    	 Connection con=ConnectionClass.getConnection();
+    	 String query="insert into  WMS_employee values(?,?,?)";
+    	 try {
+			PreparedStatement pstmt=con.prepareStatement(query);
+			pstmt.set
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+     }
+}

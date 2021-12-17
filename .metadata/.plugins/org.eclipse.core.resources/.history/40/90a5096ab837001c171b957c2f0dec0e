@@ -1,0 +1,13 @@
+package com.gowtham;
+
+public class Staticexp {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+      Sample obj = new Sample();
+      obj.test();
+     char[] exp= {'a','b','c','d'};
+     System.out.println(exp);
+	}
+
+}

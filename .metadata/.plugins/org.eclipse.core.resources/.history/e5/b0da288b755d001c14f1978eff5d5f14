@@ -1,0 +1,5 @@
+package com.cleaningmanagement.model;
+
+public class Employee {
+
+}

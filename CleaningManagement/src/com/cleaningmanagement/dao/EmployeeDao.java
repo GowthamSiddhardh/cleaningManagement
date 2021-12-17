@@ -12,12 +12,13 @@ public class EmployeeDao {
      public boolean insertEmpDatabase(Employee emp)
      {   
     	 Connection con=ConnectionClass.getConnection();
-    	 String query="insert into  WMS_employee(emp_email,emp_name,emp_pwd) values(?,?,?)";
+    	 String query="insert into  WMS_employee(emp_email,emp_name,emp_pwd,location) values(?,?,?,?)";
     	 try {
 			PreparedStatement pstmt=con.prepareStatement(query);
 			pstmt.setString(1, emp.getEmpEmail());
 			pstmt.setString(2, emp.getEmpName());
 			pstmt.setString(3, emp.getEmpPassWord());
+			pstmt.setString(4, emp.getLocation());
 			ResultSet rs=pstmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -37,7 +38,7 @@ public class EmployeeDao {
 			 rs=pstmt.executeQuery(query);
 			if(rs.next())
 			{    
-				emp=new Employee(email,rs.getString(3),password);
+				emp=new Employee(email,rs.getString(3),password,rs.getString(4));
 				
 		    }	
 		} catch (SQLException e) {

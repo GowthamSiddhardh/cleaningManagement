@@ -1,0 +1,11 @@
+package com.gowtham;
+
+public class Staticexp {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+      Sample abc = new Sample();
+      System.out.println(abc.a);
+	}
+
+}

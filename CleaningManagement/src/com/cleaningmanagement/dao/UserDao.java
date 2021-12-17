@@ -14,6 +14,7 @@ public class UserDao {
      {   
     	 Connection con=ConnectionClass.getConnection();
     	 String query="insert into  WMS_user(user_email,user_name,user_pwd,Address,mobile_no) values(?,?,?,?,?)";
+    	 
     	 try {
 			PreparedStatement pstmt=con.prepareStatement(query);
 			pstmt.setString(1, user.getUserEmail() );
@@ -32,14 +33,14 @@ public class UserDao {
 	 public User validateUser(String email,String password)
 	 {   User user=null;
 		 Connection con=ConnectionClass.getConnection();
-		 String query="select * from WMS_user where user_email='"+email+"' and user_pwd='"+password+"'";
+		 String query="select user_id from WMS_user where user_email='"+email+"' and user_pwd='"+password+"'";
 		 Statement st;
 		try {
 			st = con.createStatement();
 			ResultSet rs=st.executeQuery(query);
 			if(rs.next())
 			{
-				user=new User(email,rs.getString(3),password);
+				user=new User(rs.getInt(1));
 			}
 			
 		} catch (SQLException e) {
