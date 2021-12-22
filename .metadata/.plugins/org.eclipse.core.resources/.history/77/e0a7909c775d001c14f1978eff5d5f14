@@ -1,9 +1,0 @@
-package com.cleaningmanagement.model;
-
-public class Employee {
-	private String empEmail;
-	private String empName;
-	private String empPassWord;
-	
-
-}

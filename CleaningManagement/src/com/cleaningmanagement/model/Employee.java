@@ -3,10 +3,12 @@ package com.cleaningmanagement.model;
 import java.util.Objects;
 
 public class Employee {
+	
 	private String empEmail;
 	private String empName;
 	private String empPassWord;
 	private String location;
+	
 	public String getEmpEmail() {
 		return empEmail;
 	}
@@ -37,6 +39,7 @@ public class Employee {
 	}
 	public Employee(String empEmail, String empName, String empPassWord,String location) {
 		super();
+		
 		this.empEmail = empEmail;
 		this.empName = empName;
 		this.empPassWord = empPassWord;

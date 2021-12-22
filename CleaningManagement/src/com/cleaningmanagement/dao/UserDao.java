@@ -7,51 +7,110 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.cleaningmanagement.model.Employee;
+import com.cleaningmanagement.model.Request;
 import com.cleaningmanagement.model.User;
 
 public class UserDao {
-	 public boolean insertUserDatabase(User user)
-     {   
-    	 Connection con=ConnectionClass.getConnection();
-    	 String query="insert into  WMS_user(user_email,user_name,user_pwd,Address,mobile_no) values(?,?,?,?,?)";
-    	 
-    	 try {
-			PreparedStatement pstmt=con.prepareStatement(query);
-			pstmt.setString(1, user.getUserEmail() );
+	public boolean insertUserDatabase(User user) {
+		Connection con = ConnectionClass.getConnection();
+		String query = "insert into  WMS_user(user_email,user_name,user_pwd,Address,mobile_no) values(?,?,?,?,?)";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, user.getUserEmail());
 			pstmt.setString(2, user.getUserName());
 			pstmt.setString(3, user.getUserPwd());
 			pstmt.setString(4, user.getUserAddress());
 			pstmt.setLong(5, user.getUserMobileNo());
-			ResultSet rs=pstmt.executeQuery();
+			ResultSet rs = pstmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;
-		
-     }
-	 public User validateUser(String email,String password)
-	 {   User user=null;
-		 Connection con=ConnectionClass.getConnection();
-		 String query="select user_id from WMS_user where user_email='"+email+"' and user_pwd='"+password+"'";
-		 Statement st;
+
+	}
+
+	public User validateUser(String email, String password) {
+		User user = null;
+		Connection con = ConnectionClass.getConnection();
+		String query = "select * from WMS_user where user_email='" + email + "' and user_pwd='" + password + "'";
+		Statement st;
 		try {
 			st = con.createStatement();
-			ResultSet rs=st.executeQuery(query);
-			if(rs.next())
-			{
-				user=new User(rs.getInt(1));
+			ResultSet rs = st.executeQuery(query);
+			if (rs.next()) {
+
+				user = new User(email, rs.getString(3), password, rs.getString(5), rs.getLong(6));
 			}
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 
-		return user;
-		 
-	 }
-    
-    	
-}
 
+		return user;
+	}
+
+	public int findUserId(User user) {
+		Connection con = ConnectionClass.getConnection();
+		String query = "select user_id from WMS_user where user_email= '" + user.getUserEmail() + "'";
+		int id = 0;
+		Statement st;
+		try {
+			st = con.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			if (rs.next()) {
+				id = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
+
+	}
+
+	public User findUser(int id)
+
+	{
+		Connection con = ConnectionClass.getConnection();
+		String query = "select * from WMS_user where user_id=" + id;
+		User user = null;
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				user = new User(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getLong(6));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+
+	}
+
+	public int findUser(String email)
+
+	{
+		Connection con = ConnectionClass.getConnection();
+		String query = "select user_id from WMS_user where user_email='" + email + "'";
+		int n = 0;
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				n = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return n;
+
+	}
+
+}

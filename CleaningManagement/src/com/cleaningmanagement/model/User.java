@@ -3,7 +3,6 @@ package com.cleaningmanagement.model;
 import java.util.Objects;
 
 public class User {
-	private int userId;
     private String userEmail;
     private String userName;
     private String userPwd;
@@ -50,20 +49,6 @@ public class User {
 		this.userPwd = userPwd;
 		this.userAddress = userAddress;
 		this.userMobileNo = userMobileNo;
-	}
-	
-	
-
-	public User(int userId) {
-		super();
-		this.userId = userId;
-	}
-
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
 	}
 	@Override
 	public String toString() {

@@ -1,0 +1,31 @@
+package com.cleaningmanagement.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.cleaningmanagement.model.Request;
+
+public class RequestDao {
+    public boolean insertRequestDetails(Request req)
+    {   
+    	String id="select emp_id from WMS_employee where location= '"+req.location+"'";
+    	
+    	
+    	Connection con=ConnectionClass.getConnection();
+    	String query="insert into WMS_request(user_id,emp_id,catogory,location) values(?,?,?,?)";
+    	try {
+			PreparedStatement pstmt=con.prepareStatement(query);
+			pstmt.setInt(1, req.getUserId());
+			pstmt.setInt(2, req.empId);
+			pstmt.setString(3, req.getCatogories());
+			pstmt.setString(4, req.getLocation());
+			pstmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+    	
+    }
+}

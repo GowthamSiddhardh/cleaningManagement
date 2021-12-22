@@ -1,0 +1,91 @@
+package com.cleaningmanagement.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.cleaningmanagement.model.Employee;
+
+public class EmployeeDao {
+     public boolean insertEmpDatabase(Employee emp)
+     {   boolean flag=false;
+    	 Connection con=ConnectionClass.getConnection();
+    	 String query="insert into  WMS_employee(emp_email,emp_name,emp_pwd,location) values(?,?,?,?)";
+    	 try {
+			PreparedStatement pstmt=con.prepareStatement(query);
+			pstmt.setString(1, emp.getEmpEmail());
+			pstmt.setString(2, emp.getEmpName());
+			pstmt.setString(3, emp.getEmpPassWord());
+			pstmt.setString(4, emp.getLocation());
+			flag=pstmt.executeUpdate()>0;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return flag;
+		
+     }
+     public Employee validation(String email,String password)
+     {  
+    	Connection con=ConnectionClass.getConnection();
+    	ResultSet rs=null;
+    	Employee emp=null;
+    	try {
+    		String query="select * from WMS_employee where emp_email='"+email+"' and emp_pwd='"+password+"'";
+			Statement pstmt=con.createStatement();
+			 rs=pstmt.executeQuery(query);
+			if(rs.next())
+			{    
+				emp=new Employee(email,rs.getString(3),password,rs.getString(4));
+				
+		    }	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return emp;
+		
+    }
+    public int findEmpId(String location)
+    {   Connection con=ConnectionClass.getConnection();
+    	String query="select emp_id from WMS_employee where location= '"+location+"'";
+    	int id=0;
+    	Statement st;
+		try {
+			st = con.createStatement();
+			ResultSet rs=st.executeQuery(query);
+			if(rs.next())
+			{
+				id=rs.getInt(2);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		public Employee findEmployee(String location)
+	    {   Connection con=ConnectionClass.getConnection();
+	    	String query="select * from WMS_employee where location= '"+location+"'";
+	    	Employee emp=null;
+	    	Statement st;
+			try {
+				st = con.createStatement();
+				ResultSet rs=st.executeQuery(query);
+				if(rs.next())
+				{
+					id=rs.getInt(2);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+	
+		
+		return emp;
+    	
+    }
+     
+}
