@@ -109,4 +109,20 @@ public class EmployeeDao {
 
 	}
 
+	public int deleteEmployee(String email) {
+		Connection con = ConnectionClass.getConnection();
+		String deleteQuery = "delete from WMS_employee where emp_email='" + email + "'";
+		int n = 0;
+		try {
+			Statement stmt = con.createStatement();
+			n = stmt.executeUpdate(deleteQuery);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return n;
+
+	}
+
 }

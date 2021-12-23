@@ -30,4 +30,36 @@ public class AdminDao {
 		return admin;
 
 	}
+
+	public ResultSet showrequest(String location) {
+		Connection con = ConnectionClass.getConnection();
+		String joinQuery = "select r.request_id,r.user_id,r.category,r.location,r.emp_id,c.weight_kg,c.amount from WMS_request r "
+				+ "join WMS_calculation c on r.category=c.categories where r.location='" + location + "'";
+		ResultSet rs = null;
+		try {
+			Statement stmt = con.createStatement();
+			rs = stmt.executeQuery(joinQuery);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	public ResultSet showrequest1(String category) {
+		Connection con = ConnectionClass.getConnection();
+		String joinQuery = "select r.request_id,r.user_id,r.category,r.location,r.emp_id,c.weight_kg,c.amount from WMS_request r "
+				+ "join WMS_calculation c on r.category=c.categories where r.category='" + category + "'";
+		ResultSet rs = null;
+		try {
+			Statement stmt = con.createStatement();
+			rs = stmt.executeQuery(joinQuery);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rs;
+	}
 }

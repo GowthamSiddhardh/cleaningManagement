@@ -113,4 +113,22 @@ public class UserDao {
 
 	}
 
+	public ResultSet userBill(User user) {
+		UserDao userdao = new UserDao();
+		int userid = userdao.findUserId(user);
+		Connection con = ConnectionClass.getConnection();
+		String joinQuery = "select r.request_id,r.user_id,r.category,c.weight_kg,c.amount,r.emp_idf from WMS_request r "
+				+ "join WMS_calculation c on r.category=c.categories where user_id=" + userid;
+		ResultSet rs = null;
+		try {
+			Statement stmt = con.createStatement();
+			rs = stmt.executeQuery(joinQuery);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
 }

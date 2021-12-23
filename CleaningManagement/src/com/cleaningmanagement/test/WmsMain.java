@@ -1,5 +1,7 @@
 package com.cleaningmanagement.test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,12 +19,12 @@ import com.cleaningmanagement.model.User;
 
 public class WmsMain {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		EmployeeDao empdao = null;
 		String validateEmail = null;
 		Scanner sc = new Scanner(System.in);
 		int empId1 = 0;
-		System.out.println("1 adminvalidation \n 2 employeeReg \n 3 userReg ");
+		System.out.println("1 AdminValidation \n 2 Employee \n 3 User ");
 		int choice = Integer.parseInt(sc.nextLine());
 		switch (choice) {
 		case 1:
@@ -63,66 +65,74 @@ public class WmsMain {
 
 		case 2:
 			System.out.println("enter the employee details");
-			System.out.println("\n1 registration \n2 validation \n3 showEmloyee");
+			System.out.println("\n1 Add Employees \n2 Employee validation \n3 showEmployee \n4 delete Employee "
+					+ "\n5 ViewRequestDetails \n6 Filter RequestDetails According to location \n7 Filter RequestDetails According to category ");
 			int i = Integer.parseInt(sc.nextLine());
 			switch (i) {
 			case 1:
-				String empEmail = null;
-				String empName = null;
-				String empPassword = null;
-				String location = null;
-				boolean b = false;
-				do {
-					System.out.println("enter the employee email");
-					empEmail = sc.nextLine();
-					if (!empEmail.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}")) {
-						System.out.println("email should be in abc@gamil.com");
+				char c = 'y';
+				while (c == 'y') {
+					String empEmail = null;
+					String empName = null;
+					String empPassword = null;
+					String location = null;
+					boolean b = false;
+					do {
+						System.out.println("enter the employee email");
+						empEmail = sc.nextLine();
+						if (!empEmail.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}")) {
+							System.out.println("email should be in abc@gamil.com");
+						}
+						if (empEmail.isEmpty()) {
+							System.out.println("cant be empty");
+						}
+					} while (!empEmail.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}") || empEmail.isEmpty());
+					do {
+						System.out.println("enter the employee name");
+						empName = sc.nextLine();
+						if (!empName.matches("[a-zA-z]+{18}")) {
+							System.out.println("name should not have the numbers");
+						}
+						if (empName.isEmpty()) {
+							System.out.println("name cant be empty");
+						}
+					} while (!empName.matches("[a-zA-z]+{18}") || empName.isEmpty());
+					do {
+						System.out.println("enter the employee Password");
+						empPassword = sc.nextLine();
+						if (!empPassword.matches("[a-zA-z0-9&@#$_]{8,15}")) {
+							System.out.println("password doesnot matches the condition");
+						}
+						if (empPassword.isEmpty()) {
+							System.out.println("password not be empty");
+						}
+					} while (!empPassword.matches("[a-zA-z0-9&@#$_]{8,15}") || empPassword.isEmpty());
+					do {
+						System.out.println("enter the location");
+						location = sc.nextLine();
+						if (location.isEmpty()) {
+							System.out.println("location should not be empty");
+						}
+						if (!location.matches("[a-zA-Z]+")) {
+							System.out.println("location should be alphabets only");
+						}
+					} while (location.isEmpty() || !location.matches("[a-zA-Z]+"));
+					Employee emp = new Employee(empEmail, empName, empPassword, location);
+					empdao = new EmployeeDao();
+					b = empdao.insertEmpDatabase(emp);
+					if (b == true) {
+						System.out.println("registered successfully");
+					} else {
+						System.out.println("not registered successfully");
 					}
-					if (empEmail.isEmpty()) {
-						System.out.println("cant be empty");
-					}
-				} while (!empEmail.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}") || empEmail.isEmpty());
-				do {
-					System.out.println("enter the employee name");
-					empName = sc.nextLine();
-					if (!empName.matches("[a-zA-z]+{18}")) {
-						System.out.println("name should not have the numbers");
-					}
-					if (empName.isEmpty()) {
-						System.out.println("name cant be empty");
-					}
-				} while (!empName.matches("[a-zA-z]+{18}") || empName.isEmpty());
-				do {
-					System.out.println("enter the employee Password");
-					empPassword = sc.nextLine();
-					if (!empPassword.matches("[a-zA-z0-9&@#$_]{8,15}")) {
-						System.out.println("password doesnot matches the condition");
-					}
-					if (empPassword.isEmpty()) {
-						System.out.println("password not be empty");
-					}
-				} while (!empPassword.matches("[a-zA-z0-9&@#$_]{8,15}") || empPassword.isEmpty());
-				do {
-					System.out.println("enter the location");
-					location = sc.nextLine();
-					if (location.isEmpty()) {
-						System.out.println("location should not be empty");
-					}
-					if (!location.matches("[a-zA-Z]+")) {
-						System.out.println("location should be alphabets only");
-					}
-				} while (location.isEmpty() || !location.matches("[a-zA-Z]+"));
-				Employee emp = new Employee(empEmail, empName, empPassword, location);
-				empdao = new EmployeeDao();
-				b = empdao.insertEmpDatabase(emp);
-				if (b == true) {
-					System.out.println("registered successfully");
-				} else {
-					System.out.println("not registered successfully");
-				}
 //	    		empId1=empdao.findEmpId(location);
 //	    	    System.out.println(empId1);
+					System.out.println("do you want to add some more employee(y/n):");
+					c = sc.nextLine().charAt(0);
+
+				}
 				break;
+
 			case 2:
 				String email = null;
 				String password = null;
@@ -166,10 +176,68 @@ public class WmsMain {
 					System.out.println(list.get(j));
 				}
 				break;
+			case 4:
+				int n = 0;
+				System.out.println("enter the email");
+				String employeeEmail = sc.nextLine();
+				EmployeeDao employeedao1 = new EmployeeDao();
+				n = employeedao1.deleteEmployee(employeeEmail);
+				if (n > 0) {
+					System.out.println(n + " " + "row deleted");
+				} else {
+					System.out.println("no records are deleted");
+				}
+				break;
+			case 5:
+				System.out.println("viewRequestDetails");
+				RequestDao requestDao = new RequestDao();
+				ResultSet rs = requestDao.billing();
+				System.out.format("%-10s%-10s%-15s%-10s%-15s%-15s%-15s\n", "RequestId", "UserId", "category",
+						"location", "EmployeeId", "weight_kg", "Amount");
+				System.out.println(
+						"------------------------------------------------------------------------------------------");
+				while (rs.next()) {
+					System.out.format("%-10s%-10s%-15s%-10s%-153s%-15s%-15s\n", rs.getInt(1), rs.getInt(2),
+							rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getInt(7));
+				}
+				break;
+			case 6:
+				System.out.println("Filter According to location");
+				System.out.println("enter the location");
+				String location = sc.nextLine();
+				AdminDao admindao = new AdminDao();
+				ResultSet rst = admindao.showrequest(location);
+				System.out.format("%-10s%-10s%-15s%-10s%-15s%-15s%-15s\n", "RequestId", "UserId", "category",
+						"location", "EmployeeId", "weight_kg", "Amount");
+				System.out.println(
+						"------------------------------------------------------------------------------------------");
+				while (rst.next()) {
+					System.out.format("%-10s%-10s%-15s%-10s%-153s%-15s%-15s\n", rst.getInt(1), rst.getInt(2),
+							rst.getString(3), rst.getString(4), rst.getInt(5), rst.getInt(6), rst.getInt(7));
+				}
+				break;
+			case 7:
+				System.out.println("Filter According to category");
+				System.out.println("enter the category");
+				String category = sc.nextLine();
+				AdminDao admindao1 = new AdminDao();
+				ResultSet resultset = admindao1.showrequest1(category);
+				System.out.format("%-10s%-10s%-15s%-10s%-15s%-15s%-15s\n", "RequestId", "UserId", "category",
+						"location", "EmployeeId", "weight_kg", "Amount");
+				System.out.println(
+						"------------------------------------------------------------------------------------------");
+				while (resultset.next()) {
+					System.out.format("%-10s%-10s%-15s%-10s%-153s%-15s%-15s\n", resultset.getInt(1),
+							resultset.getInt(2), resultset.getString(3), resultset.getString(4), resultset.getInt(5),
+							resultset.getInt(6), resultset.getInt(7));
+				}
+				break;
+
 			}
+			break;
 
 		case 3:
-			System.out.println("\nUser\n1 registration \n2 validation \n3 show \n4 updateRequest");
+			System.out.println("\nUser\n1 UserRegistration \n2 UserValidation \n3 showRequest \n4 updateRequest");
 			int j = Integer.parseInt(sc.nextLine());
 
 			switch (j) {
@@ -279,6 +347,16 @@ public class WmsMain {
 						boolean b = rd.insertRequestDetails(req);
 						if (b == true) {
 							System.out.println("request details are updated successfully");
+							UserDao userdao = new UserDao();
+							ResultSet rs = userdao.userBill(user1);
+							System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", "RequestId", "UserId", "category",
+									"weight_kg", "Amount","EmployeeId");
+							System.out
+									.println("-----------------------------------------------------------------------");
+							while (rs.next()) {
+								System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", rs.getInt(1), rs.getInt(2),
+										rs.getString(3), rs.getInt(4), rs.getInt(5),- rs.getInt(6));
+							}
 						} else {
 							System.out.println("request details are not updated");
 						}
@@ -299,33 +377,29 @@ public class WmsMain {
 
 				int RequestId = 0;
 				int n = 0;
-				String category1=null;
-				String location1=null;
+				String category1 = null;
+				String location1 = null;
 				do {
-				System.out.println("enter the category");
-			    category1 = sc.nextLine();
-				if(category1.isEmpty())
-				{
-					System.out.println("category should not be empty");
-				}
-				if(!category1.matches("[a-zA-Z]+"))
-				{
-					System.out.println("category should not contains numbers");
-				}
-				}while(category1.isEmpty() ||!category1.matches("[a-zA-Z]+") );
+					System.out.println("enter the category");
+					category1 = sc.nextLine();
+					if (category1.isEmpty()) {
+						System.out.println("category should not be empty");
+					}
+					if (!category1.matches("[a-zA-Z]+")) {
+						System.out.println("category should not contains numbers");
+					}
+				} while (category1.isEmpty() || !category1.matches("[a-zA-Z]+"));
 				do {
-				System.out.println("enter the location");
-			    location1 = sc.nextLine();
-			    if(location1.isEmpty())
-			    {
-			    	System.out.println("location should not be empty");
-			    }
-			    if(!location1.matches("[a-zA-Z]+"))
-			    {
-			    	System.out.println("location should not contains numbers");
-			    }
-				}while(location1.isEmpty() ||!location1.matches("[a-zA-Z]+") );
-				
+					System.out.println("enter the location");
+					location1 = sc.nextLine();
+					if (location1.isEmpty()) {
+						System.out.println("location should not be empty");
+					}
+					if (!location1.matches("[a-zA-Z]+")) {
+						System.out.println("location should not contains numbers");
+					}
+				} while (location1.isEmpty() || !location1.matches("[a-zA-Z]+"));
+
 				System.out.println("enter the email");
 				String email = sc.nextLine();
 				UserDao userdao = new UserDao();
@@ -340,11 +414,29 @@ public class WmsMain {
 				}
 
 				System.out.println("update the request");
+				String category2 = null;
+				do {
+					System.out.println("enter the category");
+					category2 = sc.nextLine();
+					if (category2.isEmpty()) {
+						System.out.println("category should not be empty");
+					}
+					if (!category2.matches("[a-zA-Z]+")) {
+						System.out.println("category should not contains numbers");
+					}
+				} while (category2.isEmpty() || !category2.matches("[a-zA-Z]+"));
+				String location2 = null;
+				do {
+					System.out.println("enter the location");
+					location2 = sc.nextLine();
+					if (location2.isEmpty()) {
+						System.out.println("location should not be empty");
+					}
+					if (!location2.matches("[a-zA-Z]+")) {
+						System.out.println("location should not contains numbers");
+					}
+				} while (location2.isEmpty() || !location2.matches("[a-zA-Z]+"));
 
-				System.out.println("enter the category");
-				String category2 = sc.nextLine();
-				System.out.println("enter the location");
-				String location2 = sc.nextLine();
 				EmployeeDao empDao = new EmployeeDao();
 				Employee employee = empDao.findEmployee(location2);
 				RequestDao requestdao2 = new RequestDao();
@@ -354,6 +446,7 @@ public class WmsMain {
 				} else {
 					System.out.println("not updated successfully");
 				}
+				break;
 
 			}
 

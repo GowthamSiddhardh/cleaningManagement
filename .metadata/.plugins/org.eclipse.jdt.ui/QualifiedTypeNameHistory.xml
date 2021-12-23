@@ -21,15 +21,15 @@
     <fullyQualifiedTypeName name="com.cleaningmanagement.model.Calculation"/>
     <fullyQualifiedTypeName name="com.cleaningmanagement.dao.CalculationDao"/>
     <fullyQualifiedTypeName name="java.util.Scanner"/>
-    <fullyQualifiedTypeName name="java.sql.Statement"/>
-    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
     <fullyQualifiedTypeName name="com.cleaningmanagement.model.Employee"/>
-    <fullyQualifiedTypeName name="com.cleaningmanagement.dao.EmployeeDao"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.cleaningmanagement.dao.UserDao"/>
     <fullyQualifiedTypeName name="com.cleaningmanagement.model.User"/>
     <fullyQualifiedTypeName name="com.cleaningmanagement.model.Request"/>
-    <fullyQualifiedTypeName name="com.cleaningmanagement.dao.RequestDao"/>
     <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+    <fullyQualifiedTypeName name="com.cleaningmanagement.dao.EmployeeDao"/>
+    <fullyQualifiedTypeName name="java.sql.Statement"/>
+    <fullyQualifiedTypeName name="com.cleaningmanagement.dao.RequestDao"/>
+    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
 </qualifiedTypeNameHistroy>
