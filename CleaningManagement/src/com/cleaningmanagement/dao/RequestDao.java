@@ -113,8 +113,7 @@ public class RequestDao {
 	public ResultSet billing()
 	{
 		Connection con = ConnectionClass.getConnection();
-		String joinQuery="select r.request_id,r.user_id,r.category,c.weight_kg,c.amount from WMS_request r "
-				+ "join WMS_calculation c on r.category=c.categories";
+		String joinQuery="select r.request_id,r.user_id,r.category,r.location,c.weight_kg,c.amount,r.emp_id from WMS_request r join WMS_calculation c on r.category=c.categories";
 		ResultSet rs=null;
 		try {
 			Statement stmt=con.createStatement();

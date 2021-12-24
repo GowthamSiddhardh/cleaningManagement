@@ -33,7 +33,8 @@ public class AdminDao {
 
 	public ResultSet showrequest(String location) {
 		Connection con = ConnectionClass.getConnection();
-		String joinQuery = "select r.request_id,r.user_id,r.category,r.location,r.emp_id,c.weight_kg,c.amount from WMS_request r "
+		String joinQuery = "select r.request_id,r.user_id,r.category,r.location,c.weight_kg,c.amount,r.emp_id from WMS_request r "
+
 				+ "join WMS_calculation c on r.category=c.categories where r.location='" + location + "'";
 		ResultSet rs = null;
 		try {
@@ -61,5 +62,23 @@ public class AdminDao {
 			e.printStackTrace();
 		}
 		return rs;
+	}
+
+	public int updateRequest(String status, int requestId) {
+		Connection con = ConnectionClass.getConnection();
+		String updateQuery = "update WMS_request set status=? where request_id=?";
+		int n = 0;
+		try {
+			PreparedStatement pstmt = con.prepareStatement(updateQuery);
+			pstmt.setString(1, status);
+			pstmt.setInt(2, requestId);
+			n = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return n;
+
 	}
 }

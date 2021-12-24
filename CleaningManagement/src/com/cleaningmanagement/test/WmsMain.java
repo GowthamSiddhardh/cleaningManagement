@@ -24,7 +24,7 @@ public class WmsMain {
 		String validateEmail = null;
 		Scanner sc = new Scanner(System.in);
 		int empId1 = 0;
-		System.out.println("1 AdminValidation \n 2 Employee \n 3 User ");
+		System.out.println("1 Admin \n2 User \n3 Employee ");
 		int choice = Integer.parseInt(sc.nextLine());
 		switch (choice) {
 		case 1:
@@ -63,10 +63,10 @@ public class WmsMain {
 				}
 			} while (admin == null);
 
-		case 2:
 			System.out.println("enter the employee details");
-			System.out.println("\n1 Add Employees \n2 Employee validation \n3 showEmployee \n4 delete Employee "
-					+ "\n5 ViewRequestDetails \n6 Filter RequestDetails According to location \n7 Filter RequestDetails According to category ");
+			System.out.println("\n1 Add Employees \n2 showEmployee \n3 delete Employee "
+					+ "\n4 ViewRequestDetails \n5 Filter RequestDetails According to location \n6 Filter RequestDetails According to category"
+					+ "\n7 update the Request status ");
 			int i = Integer.parseInt(sc.nextLine());
 			switch (i) {
 			case 1:
@@ -134,49 +134,13 @@ public class WmsMain {
 				break;
 
 			case 2:
-				String email = null;
-				String password = null;
-				Employee employee = null;
-				do {
-					System.out.println("login");
-
-					do {
-						System.out.println("enter the email");
-						email = sc.nextLine();
-						if (!email.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}")) {
-							System.out.println("email should be in abc@gamil.com");
-						}
-						if (email.isEmpty()) {
-							System.out.println("cant be empty");
-						}
-					} while (!email.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}") || email.isEmpty());
-					do {
-						System.out.println("enter the password");
-						password = sc.nextLine();
-						if (!password.matches("[a-zA-Z0-9@#$_&%]{8,15}")) {
-							System.out.println("password doesnot matches the condition");
-						}
-						if (password.isEmpty()) {
-							System.out.println("password should not be empty");
-						}
-					} while (!password.matches("[a-zA-Z0-9@#$_&%]{8,15}") || password.isEmpty());
-					empdao = new EmployeeDao();
-					employee = empdao.validation(email, password);
-
-					if (employee != null) {
-						System.out.println("welcome" + " " + employee.getEmpName());
-					} else {
-						System.out.println("invalid email or password");
-					}
-				} while (employee == null);
-			case 3:
 				EmployeeDao employeedao = new EmployeeDao();
 				List<Employee> list = employeedao.showEmployee();
 				for (int j = 0; j < list.size(); j++) {
 					System.out.println(list.get(j));
 				}
 				break;
-			case 4:
+			case 3:
 				int n = 0;
 				System.out.println("enter the email");
 				String employeeEmail = sc.nextLine();
@@ -188,55 +152,68 @@ public class WmsMain {
 					System.out.println("no records are deleted");
 				}
 				break;
-			case 5:
+			case 4:
 				System.out.println("viewRequestDetails");
 				RequestDao requestDao = new RequestDao();
 				ResultSet rs = requestDao.billing();
-				System.out.format("%-10s%-10s%-15s%-10s%-15s%-15s%-15s\n", "RequestId", "UserId", "category",
-						"location", "EmployeeId", "weight_kg", "Amount");
+				System.out.format("%-10s%-10s%-15s%-10s%-15s%-10s%-10s\n", "RequestId", "UserId", "category",
+						"location", "weight", "amount", "EmployeeId");
 				System.out.println(
 						"------------------------------------------------------------------------------------------");
 				while (rs.next()) {
-					System.out.format("%-10s%-10s%-15s%-10s%-153s%-15s%-15s\n", rs.getInt(1), rs.getInt(2),
+					System.out.format("%-10s%-10s%-15s%-10s%-15s%-10s%-10s\n", rs.getInt(1), rs.getInt(2),
 							rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getInt(7));
 				}
 				break;
-			case 6:
+			case 5:
 				System.out.println("Filter According to location");
 				System.out.println("enter the location");
 				String location = sc.nextLine();
 				AdminDao admindao = new AdminDao();
 				ResultSet rst = admindao.showrequest(location);
-				System.out.format("%-10s%-10s%-15s%-10s%-15s%-15s%-15s\n", "RequestId", "UserId", "category",
-						"location", "EmployeeId", "weight_kg", "Amount");
+				System.out.format("%-10s%-10s%-15s%-10s%-15s%-10s%-10s\n", "RequestId", "UserId", "category",
+						"location", "weight", "amount", "EmployeeId");
 				System.out.println(
 						"------------------------------------------------------------------------------------------");
 				while (rst.next()) {
-					System.out.format("%-10s%-10s%-15s%-10s%-153s%-15s%-15s\n", rst.getInt(1), rst.getInt(2),
+					System.out.format("%-10s%-10s%-15s%-10s%-15s%-10s%-10s\n", rst.getInt(1), rst.getInt(2),
 							rst.getString(3), rst.getString(4), rst.getInt(5), rst.getInt(6), rst.getInt(7));
 				}
 				break;
-			case 7:
+			case 6:
 				System.out.println("Filter According to category");
 				System.out.println("enter the category");
 				String category = sc.nextLine();
 				AdminDao admindao1 = new AdminDao();
 				ResultSet resultset = admindao1.showrequest1(category);
-				System.out.format("%-10s%-10s%-15s%-10s%-15s%-15s%-15s\n", "RequestId", "UserId", "category",
+				System.out.format("%-10s%-10s%-15s%-10s%-15s%-10s%-10s\n", "RequestId", "UserId", "category",
 						"location", "EmployeeId", "weight_kg", "Amount");
 				System.out.println(
 						"------------------------------------------------------------------------------------------");
 				while (resultset.next()) {
-					System.out.format("%-10s%-10s%-15s%-10s%-153s%-15s%-15s\n", resultset.getInt(1),
-							resultset.getInt(2), resultset.getString(3), resultset.getString(4), resultset.getInt(5),
-							resultset.getInt(6), resultset.getInt(7));
+					System.out.format("%-10s%-10s%-15s%-10s%-15s%-10s%-10s\n", resultset.getInt(1), resultset.getInt(2),
+							resultset.getString(3), resultset.getString(4), resultset.getInt(5), resultset.getInt(6),
+							resultset.getInt(7));
 				}
 				break;
+			case 7:
+				int j = 0;
+				System.out.println("update the status");
+				String status = sc.nextLine();
+				System.out.println("enter the RequestId");
+				int requestId = Integer.parseInt(sc.nextLine());
+				AdminDao admindao2 = new AdminDao();
+				j = admindao2.updateRequest(status, requestId);
+				if (j > 0) {
+					System.out.println(j + " " + "row updated");
+				} else {
+					System.out.println("not updated properly");
+				}
 
 			}
 			break;
 
-		case 3:
+		case 2:
 			System.out.println("\nUser\n1 UserRegistration \n2 UserValidation \n3 showRequest \n4 updateRequest");
 			int j = Integer.parseInt(sc.nextLine());
 
@@ -334,7 +311,7 @@ public class WmsMain {
 					UserDao udd = new UserDao();
 					user1 = udd.validateUser(validateUseremail, validateUserPwd);
 					if (user1 != null) {
-						System.out.println("welcome" + user1.getUserName());
+						System.out.println("welcome" + " " + user1.getUserName());
 						EmployeeDao empDao = new EmployeeDao();
 						// int userId=uid.findUserId(validateUseremail);
 						System.out.println("enter the catagories");
@@ -350,12 +327,12 @@ public class WmsMain {
 							UserDao userdao = new UserDao();
 							ResultSet rs = userdao.userBill(user1);
 							System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", "RequestId", "UserId", "category",
-									"weight_kg", "Amount","EmployeeId");
+									"weight_kg", "Amount", "EmployeeId");
 							System.out
 									.println("-----------------------------------------------------------------------");
 							while (rs.next()) {
 								System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", rs.getInt(1), rs.getInt(2),
-										rs.getString(3), rs.getInt(4), rs.getInt(5),- rs.getInt(6));
+										rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
 							}
 						} else {
 							System.out.println("request details are not updated");
@@ -365,15 +342,8 @@ public class WmsMain {
 					}
 				} while (user1 == null);
 				break;
-			case 3:
 
-				RequestDao requestdao = new RequestDao();
-				List<Request> listemployee = requestdao.showRequest();
-				for (int k = 0; k < listemployee.size(); k++) {
-					System.out.println(listemployee.get(k));
-				}
-				break;
-			case 4:
+			case 3:
 
 				int RequestId = 0;
 				int n = 0;
@@ -448,6 +418,54 @@ public class WmsMain {
 				}
 				break;
 
+			}
+		case 3:
+			System.out.println("\n1 Employee validation \n2 viewRequest");
+			int c = Integer.parseInt(sc.nextLine());
+			switch (c) {
+			case 1:
+				String email = null;
+				String password = null;
+				Employee employee = null;
+				do {
+					System.out.println("login");
+
+					do {
+						System.out.println("enter the email");
+						email = sc.nextLine();
+						if (!email.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}")) {
+							System.out.println("email should be in abc@gamil.com");
+						}
+						if (email.isEmpty()) {
+							System.out.println("cant be empty");
+						}
+					} while (!email.matches("[a-z][a-z0-9]+[@][a-z]+[.][a-z]{2,3}") || email.isEmpty());
+					do {
+						System.out.println("enter the password");
+						password = sc.nextLine();
+						if (!password.matches("[a-zA-Z0-9@#$_&%]{8,15}")) {
+							System.out.println("password doesnot matches the condition");
+						}
+						if (password.isEmpty()) {
+							System.out.println("password should not be empty");
+						}
+					} while (!password.matches("[a-zA-Z0-9@#$_&%]{8,15}") || password.isEmpty());
+					empdao = new EmployeeDao();
+					employee = empdao.validation(email, password);
+
+					if (employee != null) {
+						System.out.println("welcome" + " " + employee.getEmpName());
+					} else {
+						System.out.println("invalid email or password");
+					}
+				} while (employee == null);
+			case 2:
+				RequestDao requestdao = new RequestDao();
+				List<Request> listemployee = requestdao.showRequest();
+				for (int k = 0; k < listemployee.size(); k++) {
+					System.out.println(listemployee.get(k));
+				}
+				break;
 			}
 
 		}
