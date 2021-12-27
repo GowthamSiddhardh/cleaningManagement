@@ -214,9 +214,9 @@ public class WmsMain {
 			break;
 
 		case 2:
-			System.out.println("\nUser\n1 UserRegistration \n2 UserValidation \n3 showRequest \n4 updateRequest");
+			System.out.println("\nUser\n1 UserRegistration \n2 UserValidation");
 			int j = Integer.parseInt(sc.nextLine());
-
+			User user1 = null;
 			switch (j) {
 			case 1:
 				String userEmail = null;
@@ -274,7 +274,8 @@ public class WmsMain {
 					}
 				} while (!tempno.matches("[0-9]+{10}") || tempno.isEmpty());
 				mobileNo = Long.parseLong(tempno);
-				User user = new User(userEmail, userName, userPassword, userAddress, mobileNo);
+				// Double wallet=0.0;
+				User user = new User(userEmail, userName, userPassword, userAddress, mobileNo, 0.0);
 				UserDao ud = new UserDao();
 				boolean a = ud.insertUserDatabase(user);
 				System.out.println("inserted successfully");
@@ -286,7 +287,7 @@ public class WmsMain {
 				String catagories = null;
 				String location = null;
 				Request req = null;
-				User user1 = null;
+
 				do {
 					System.out.println("login");
 
@@ -312,113 +313,118 @@ public class WmsMain {
 					user1 = udd.validateUser(validateUseremail, validateUserPwd);
 					if (user1 != null) {
 						System.out.println("welcome" + " " + user1.getUserName());
-						EmployeeDao empDao = new EmployeeDao();
-						// int userId=uid.findUserId(validateUseremail);
-						System.out.println("enter the catagories");
-						catagories = sc.nextLine();
-						System.out.println("enter the location");
-						location = sc.nextLine();
-						Employee employee = empDao.findEmployee(location);
-						req = new Request(user1, employee, catagories, location);
-						RequestDao rd = new RequestDao();
-						boolean b = rd.insertRequestDetails(req);
-						if (b == true) {
-							System.out.println("request details are updated successfully");
-							UserDao userdao = new UserDao();
-							ResultSet rs = userdao.userBill(user1);
-							System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", "RequestId", "UserId", "category",
-									"weight_kg", "Amount", "EmployeeId");
-							System.out
-									.println("-----------------------------------------------------------------------");
-							while (rs.next()) {
-								System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", rs.getInt(1), rs.getInt(2),
-										rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+						System.out.println("\n1 RaiseRequest \n2 cancleRequest \n3 rechargeWallet");
+						int choice1 = Integer.parseInt(sc.nextLine());
+						switch (choice1) {
+						case 1:
+							EmployeeDao empDao = new EmployeeDao();
+							// int userId=uid.findUserId(validateUseremail);
+							System.out.println("enter the catagories");
+							catagories = sc.nextLine();
+							System.out.println("enter the location");
+							location = sc.nextLine();
+							Employee employee = empDao.findEmployee(location);
+							req = new Request(user1, employee, catagories, location);
+							RequestDao rd = new RequestDao();
+							boolean b = rd.insertRequestDetails(req);
+							int amount = 0;
+							if (b == true) {
+								System.out.println("request details are updated successfully");
+								UserDao userdao = new UserDao();
+								ResultSet rs = userdao.userBill(user1);
+								System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", "RequestId", "UserId", "category",
+										"weight_kg", "Amount", "EmployeeId");
+								System.out.println(
+										"-----------------------------------------------------------------------");
+								while (rs.next()) {
+									System.out.format("%-10s%-10s%-15s%-10s%-10s%-10s\n", rs.getInt(1), rs.getInt(2),
+											rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+									amount = rs.getInt(5);
+								}
+
+								UserDao userdao1 = new UserDao();
+								boolean b1 = userdao1.updateWallet(user1, amount);
+								if (b1 == true) {
+									System.out.println("Amount is deducted from wallet successfully");
+								} else {
+									System.out.println("Amount is not deducted (or) insufficent balance");
+								}
+							} else {
+								System.out.println("request details are not updated");
 							}
-						} else {
-							System.out.println("request details are not updated");
+
+							break;
+
+						case 2:
+							int RequestId = 0;
+							int n = 0;
+							String category1 = null;
+							String location1 = null;
+							do {
+								System.out.println("enter the category");
+								category1 = sc.nextLine();
+								if (category1.isEmpty()) {
+									System.out.println("category should not be empty");
+								}
+								if (!category1.matches("[a-zA-Z]+")) {
+									System.out.println("category should not contains numbers");
+								}
+							} while (category1.isEmpty() || !category1.matches("[a-zA-Z]+"));
+							do {
+								System.out.println("enter the location");
+								location1 = sc.nextLine();
+								if (location1.isEmpty()) {
+									System.out.println("location should not be empty");
+								}
+								if (!location1.matches("[a-zA-Z]+")) {
+									System.out.println("location should not contains numbers");
+								}
+							} while (location1.isEmpty() || !location1.matches("[a-zA-Z]+"));
+
+							// System.out.println("enter the email");
+							// String email = sc.nextLine();
+							UserDao userdao = new UserDao();
+							int userId = userdao.findUser(user1.getUserEmail());
+							System.out.println(userId);
+							RequestDao requestdao1 = new RequestDao();
+							RequestId = requestdao1.findRequestID(userId, category1, location1);
+							if (RequestId != 0) {
+								System.out.println("requestId found");
+							} else {
+								System.out.println("requestId not found");
+							}
+							RequestDao requestdao = new RequestDao();
+							boolean b2 = requestdao.deleteRequest(RequestId);
+							if (b2 == true) {
+								System.out.println("Request is deleted successfully");
+							} else {
+								System.out.println("Request is not deleted");
+							}
+
+							break;
+
+						case 3:
+							System.out.println("how much you want to recharge");
+							Double walletAmount = Double.parseDouble(sc.nextLine());
+							user1.setWallet(user1.getWallet() + walletAmount);
+							UserDao userdao1 = new UserDao();
+							boolean b1 = userdao1.rechargeWallet(user1);
+							if (b1 == true) {
+								System.out.println("wallet recharge successfully");
+							} else {
+								System.out.println("wallet is not updated");
+							}
+							break;
 						}
 					} else {
 						System.out.println("invalid username and password");
 					}
+
 				} while (user1 == null);
 				break;
 
-			case 3:
-
-				int RequestId = 0;
-				int n = 0;
-				String category1 = null;
-				String location1 = null;
-				do {
-					System.out.println("enter the category");
-					category1 = sc.nextLine();
-					if (category1.isEmpty()) {
-						System.out.println("category should not be empty");
-					}
-					if (!category1.matches("[a-zA-Z]+")) {
-						System.out.println("category should not contains numbers");
-					}
-				} while (category1.isEmpty() || !category1.matches("[a-zA-Z]+"));
-				do {
-					System.out.println("enter the location");
-					location1 = sc.nextLine();
-					if (location1.isEmpty()) {
-						System.out.println("location should not be empty");
-					}
-					if (!location1.matches("[a-zA-Z]+")) {
-						System.out.println("location should not contains numbers");
-					}
-				} while (location1.isEmpty() || !location1.matches("[a-zA-Z]+"));
-
-				System.out.println("enter the email");
-				String email = sc.nextLine();
-				UserDao userdao = new UserDao();
-				int userId = userdao.findUser(email);
-				System.out.println(userId);
-				RequestDao requestdao1 = new RequestDao();
-				RequestId = requestdao1.findRequestID(userId, category1, location1);
-				if (RequestId != 0) {
-					System.out.println("requestId found");
-				} else {
-					System.out.println("requestId not found");
-				}
-
-				System.out.println("update the request");
-				String category2 = null;
-				do {
-					System.out.println("enter the category");
-					category2 = sc.nextLine();
-					if (category2.isEmpty()) {
-						System.out.println("category should not be empty");
-					}
-					if (!category2.matches("[a-zA-Z]+")) {
-						System.out.println("category should not contains numbers");
-					}
-				} while (category2.isEmpty() || !category2.matches("[a-zA-Z]+"));
-				String location2 = null;
-				do {
-					System.out.println("enter the location");
-					location2 = sc.nextLine();
-					if (location2.isEmpty()) {
-						System.out.println("location should not be empty");
-					}
-					if (!location2.matches("[a-zA-Z]+")) {
-						System.out.println("location should not contains numbers");
-					}
-				} while (location2.isEmpty() || !location2.matches("[a-zA-Z]+"));
-
-				EmployeeDao empDao = new EmployeeDao();
-				Employee employee = empDao.findEmployee(location2);
-				RequestDao requestdao2 = new RequestDao();
-				n = requestdao2.updateRequest(category2, location2, employee, RequestId);
-				if (n != 0) {
-					System.out.println("updated successfully");
-				} else {
-					System.out.println("not updated successfully");
-				}
-				break;
-
 			}
+			break;
 		case 3:
 			System.out.println("\n1 Employee validation \n2 viewRequest");
 			int c = Integer.parseInt(sc.nextLine());

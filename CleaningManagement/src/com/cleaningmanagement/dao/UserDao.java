@@ -41,7 +41,7 @@ public class UserDao {
 			ResultSet rs = st.executeQuery(query);
 			if (rs.next()) {
 
-				user = new User(email, rs.getString(3), password, rs.getString(5), rs.getLong(6));
+				user = new User(email, rs.getString(3), password, rs.getString(5), rs.getLong(6), rs.getDouble(7));
 			}
 
 		} catch (SQLException e) {
@@ -82,7 +82,8 @@ public class UserDao {
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {
-				user = new User(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getLong(6));
+				user = new User(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getLong(6),
+						rs.getDouble(7));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -129,6 +130,45 @@ public class UserDao {
 			e.printStackTrace();
 		}
 		return rs;
+	}
+
+	public boolean rechargeWallet(User user) {
+		Connection con = ConnectionClass.getConnection();
+		String updateQuery = "update WMS_user set wallet=? where user_id=?";
+		UserDao userdao = new UserDao();
+		int userId = userdao.findUserId(user);
+		boolean flag = false;
+		try {
+			PreparedStatement pstmt = con.prepareStatement(updateQuery);
+			pstmt.setDouble(1, user.getWallet());
+			pstmt.setInt(2, userId);
+			flag = pstmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return flag;
+
+	}
+
+	public boolean updateWallet(User user, int amount) {
+		Connection con = ConnectionClass.getConnection();
+		UserDao userdao = new UserDao();
+		int userId = userdao.findUserId(user);
+		String updateQuery1 = "update WMS_user set Wallet=" + (user.getWallet() - amount) + "where user_id=" + userId;
+		boolean flag = false;
+		try {
+			Statement stmt = con.createStatement();
+			flag = stmt.executeUpdate(updateQuery1) > 0;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return flag;
+
 	}
 
 }

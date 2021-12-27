@@ -84,32 +84,24 @@ public class RequestDao {
 		}
 		return n;
 	}
-
-	public int updateRequest(String category2, String location2, Employee employee, int requestId) {
+	public boolean deleteRequest(int RequestId)
+	{   
 		Connection con = ConnectionClass.getConnection();
-		String query = "update WMS_request set category=?,location=?,emp_id=? where request_id=?";
-		int n = 0;
+		String deleteQuery="delete from WMS_request where request_id="+RequestId;
+		boolean flag=false;
 		try {
-			EmployeeDao empDao = new EmployeeDao();
-			int empId = empDao.findEmpId(employee);
-			PreparedStatement pstmt = con.prepareStatement(query);
-			pstmt.setString(1, category2);
-			// System.out.println(category2);
-			pstmt.setString(2, location2);
-			// System.out.println(location2);
-			pstmt.setInt(3, empId);
-			// System.out.println(empId);
-			pstmt.setInt(4, requestId);
-			// System.out.println(requestId);
-			n = pstmt.executeUpdate();
-
+			Statement stmt=con.createStatement();
+			flag=stmt.executeUpdate(deleteQuery)>0;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return n;
-
+		return flag;
+		
 	}
+
+	
+	
 	public ResultSet billing()
 	{
 		Connection con = ConnectionClass.getConnection();
